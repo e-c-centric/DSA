@@ -11,9 +11,8 @@ public class LabSession1 {
 
     public double sumToNSquare(int n) {
         double sumSquareN = 0;
-        for (int i = 0; i < n; i++) {
-            sumSquareN += (i * i);
-        }
+        int a = n-1;
+        sumSquareN = (a * (a + 1) * ((2 * a) + 1)) / 6;
         return sumSquareN;
     }
     public static void main(String args[]) {
