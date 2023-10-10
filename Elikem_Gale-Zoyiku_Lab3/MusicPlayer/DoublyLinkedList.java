@@ -21,14 +21,20 @@ public class DoublyLinkedList<T> {
         if (size == 0) {
             head = newNode;
             tail = newNode;
+            head.prev = tail;
+            tail.next = head;
         } else if (position == 0) {
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
+            head.prev = tail;
+            tail.next = head;
         } else if (position == size) {
             newNode.prev = tail;
             tail.next = newNode;
             tail = newNode;
+            tail.next = head;
+            head.prev = tail;
         } else {
             Node<T> current = head;
             for (int i = 0; i < position - 1; i++) {
@@ -53,10 +59,12 @@ public class DoublyLinkedList<T> {
             tail = null;
         } else if (position == 0) {
             head = head.next;
-            head.prev = null;
+            head.prev = tail;
+            tail.next = head;
         } else if (position == size - 1) {
             tail = tail.prev;
-            tail.next = null;
+            tail.next = head;
+            head.prev = tail;
         } else {
             Node<T> current = head;
             for (int i = 0; i < position; i++) {

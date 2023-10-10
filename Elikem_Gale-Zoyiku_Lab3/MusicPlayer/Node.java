@@ -1,4 +1,5 @@
 package MusicPlayer;
+
 public class Node<T> {
     T data;
     Node<T> prev;
