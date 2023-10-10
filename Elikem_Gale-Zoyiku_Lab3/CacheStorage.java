@@ -1,3 +1,6 @@
+import MusicPlayer.DoublyLinkedList;
+import MusicPlayer.Node;
+
 /**
  * The <code>Node</code> class represents a node in a doubly linked list.
  * It has a <code>data</code> field that stores the data of the node.
