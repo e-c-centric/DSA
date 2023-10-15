@@ -103,6 +103,7 @@ public class DoublyLinkedList<T> {
      * Deletes the first node containing the given data from the linked list.
      * @param data the data to be deleted
      * @see #deleteByPosition(int)
+     * @see Song#equals(Song)
      */
     public void deleteByElement(T data) {
         Node<T> current = head;

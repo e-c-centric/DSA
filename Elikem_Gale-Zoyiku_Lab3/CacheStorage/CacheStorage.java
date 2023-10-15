@@ -1,4 +1,7 @@
 package CacheStorage;
+
+import java.util.Scanner;
+
 /**
  * The <code>CacheStorage</code> class represents a cache that stores a fixed
  * number of items.
@@ -14,8 +17,9 @@ package CacheStorage;
  * It has a <code>evictLeastRecentlyUsedItem()</code> method that evicts the
  * least recently used item from the cache.
  * 
- * @param <T> The type of data stored in the nodes of the list..
- * @see DoublyLinkedList 
+ * @param <T> The type of data stored in the cache.
+ * @see DoublyLinkedList
+ * @see Node
  * @author Elikem Asudo Gale-Zoyiku
  */
 public class CacheStorage<T extends Node<?>> {
@@ -37,6 +41,10 @@ public class CacheStorage<T extends Node<?>> {
 
     /**
      * The <code>addItem</code> method adds an item to the cache.
+     * If the cache is full, the least recently used item is evicted from the cache.
+     * 
+     * @see DoublyLinkedList#insert(Node, int)
+     * @see CacheStorage#evictLeastRecentlyUsedItem()
      * 
      * @param data The item to be stored in the cache.
      * @return None
@@ -51,6 +59,11 @@ public class CacheStorage<T extends Node<?>> {
 
     /**
      * The <code>getItem</code> method gets an item from the cache.
+     * If the item is found in the cache, it is moved to the head of the cache.
+     * 
+     * @see DoublyLinkedList#getHead(void)
+     * @see DoublyLinkedList#setHead(Node)
+     * @see DoublyLinkedList#setTail(Node)
      * 
      * @param data The item to be retrieved from the cache.
      * @return The retrieved item or null if the item is not found in the cache.
@@ -58,6 +71,7 @@ public class CacheStorage<T extends Node<?>> {
     public T getItem(T data) {
         Node<T> current = cache.getHead();
         while (current != null) {
+            // assumption is that the data type in the cache has an equals method
             if (current.data.equals(data)) {
                 if (current != cache.getHead()) {
                     current.prev.next = current.next;
@@ -82,8 +96,11 @@ public class CacheStorage<T extends Node<?>> {
      * The <code>evictLeastRecentlyUsedItem</code> method evicts the least recently
      * used item from the cache.
      * 
+     * @see DoublyLinkedList#getTail(void)
+     * @see DoublyLinkedList#setTail(Node)
+     * @see DoublyLinkedList#setHead(void)
+     * 
      * @param None
-     * @return None
      */
     public void evictLeastRecentlyUsedItem() {
         Node<T> tail = cache.getTail();
@@ -99,26 +116,50 @@ public class CacheStorage<T extends Node<?>> {
         }
     }
 
-
     public static void main(String[] args) {
-        CacheStorage<Node<Integer>> cache = new CacheStorage<>(3);
-        Node<Integer> node1 = new Node<>(1);
-        Node<Integer> node2 = new Node<>(2);
-        Node<Integer> node3 = new Node<>(3);
-        Node<Integer> node4 = new Node<>(4);
+        Scanner scanner = new Scanner(System.in);
 
-        cache.addItem(node1);
-        cache.addItem(node2);
-        cache.addItem(node3);
+        System.out.print("Enter the capacity of the cache: ");
+        int capacity = scanner.nextInt();
+        CacheStorage<Node<Object>> cache = new CacheStorage<>(capacity);
 
-        System.out.println(cache.getItem(node1)); 
-        System.out.println(cache.getItem(node2)); 
+        while (true) {
+            System.out.println("\nCache Operations:");
+            System.out.println("1. Add an item to the cache");
+            System.out.println("2. Get an item from the cache");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
 
-        cache.addItem(node4);
+            int choice = scanner.nextInt();
 
-        System.out.println(cache.getItem(node1)); 
-        System.out.println(cache.getItem(node2)); 
-        System.out.println(cache.getItem(node3)); 
-        System.out.println(cache.getItem(node4)); 
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter an item to add to the cache: ");
+                    Node<Object> itemToAdd = new Node<Object>(scanner.next());
+                    cache.addItem(itemToAdd);
+                    System.out.println("Item added to the cache.");
+                    break;
+
+                case 2:
+                    System.out.print("Enter an item to get from the cache: ");
+                    Node<Object> itemToGet = new Node<Object>(scanner.next());
+                    Object result = cache.getItem(itemToGet);
+                    if (result != null) {
+                        System.out.println("Item found in the cache: " + result);
+                    } else {
+                        System.out.println("Item not found in the cache.");
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Exiting the program.");
+                    scanner.close();
+                    System.exit(0);
+
+                default:
+                    System.out.println("Invalid choice. Please choose a valid option.");
+                    break;
+            }
+        }
     }
 }

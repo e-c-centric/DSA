@@ -38,6 +38,7 @@ class Node<T> {
      * @param None
      * @return The data of the node.
      */
+    @Override
     public String toString() {
         return data.toString();
     }
