@@ -36,7 +36,7 @@ public class DoublyLinkedList<T extends Node<?>> {
     /**
      * The <code>insert</code> method inserts a node at a given position.
      * 
-     * @param data The song to be stored in the node.
+     * @param data The data to be stored in the node.
      * @param pos  The position at which the node is to be inserted.
      * @return None
      */
@@ -91,13 +91,9 @@ public class DoublyLinkedList<T extends Node<?>> {
             head = head.next;
             head.prev = null;
             size--;
-        } else if (pos == size + 1) {
-            Node<T> current = head;
-            while (current.next != null) {
-                current = current.next;
-            }
-            current.prev.next = null;
-            current.prev = current.prev.prev;
+        } else if (pos == size) {
+            tail.prev.next = null;
+            tail = tail.prev;
             size--;
         } else {
             Node<T> current = head;
@@ -109,6 +105,20 @@ public class DoublyLinkedList<T extends Node<?>> {
             current.next = current.next.next;
             current.next.prev = current;
             size--;
+        }
+    }
+
+    public void deleteByElement(T data) {
+        Node<T> current = head;
+        int position = 0;
+
+        while (current != null) {
+            if (current.data.equals(data)) {
+                delete(position);
+                return;
+            }
+            current = current.next;
+            position++;
         }
     }
 
@@ -174,10 +184,36 @@ public class DoublyLinkedList<T extends Node<?>> {
      * 
      * @param tail The node to be set as the tail node of the list.
      * @return None
-     * @see DoublyLinkedList#insert(T, int)
      * @see DoublyLinkedList#size
+     * @apiNote Written specifcally for use in the <code>CacheStorage</code> class.
      */
-    public void setTail(Node<T> tail) {
-        this.insert(tail.data, size + 1);
+    public void setTail() {
+        this.delete(size);        
     }
+
+    public void display(){
+        Node<T> current = head;
+        while(current != null){
+            System.out.println(current.data);
+            current = current.next;
+        }
+    }
+
+/**
+ * The <code>getNodeContainingData</code> method finds the first node containing
+ * the specified data element.
+ *
+ * @param data The data to search for.
+ * @return The node containing the data or null if not found.
+ */
+public T getNodeContainingData(T data) {
+    Node<T> current = head;
+    while (current != null) {
+        if (current.data.equals(data)) {
+            return current.data;
+        }
+        current = current.next;
+    }
+    return null; // Data not found in the list
+}
 }

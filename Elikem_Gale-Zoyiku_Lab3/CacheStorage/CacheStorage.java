@@ -22,10 +22,9 @@ import java.util.Scanner;
  * @see Node
  * @author Elikem Asudo Gale-Zoyiku
  */
-public class CacheStorage<T extends Node<?>> {
-    int size = 0;
+public class CacheStorage<T> {
     private int capacity;
-    private DoublyLinkedList<T> cache;
+    private DoublyLinkedList<Node<T>> cache;
 
     /**
      * The <code>CacheStorage</code> constructor initializes the
@@ -36,7 +35,7 @@ public class CacheStorage<T extends Node<?>> {
      */
     public CacheStorage(int capacity) {
         this.capacity = capacity;
-        this.cache = new DoublyLinkedList<T>();
+        this.cache = new DoublyLinkedList<>();
     }
 
     /**
@@ -50,11 +49,11 @@ public class CacheStorage<T extends Node<?>> {
      * @return None
      */
     public void addItem(T data) {
-        if (size == capacity) {
+        if (cache.size >= capacity) {
             evictLeastRecentlyUsedItem();
         }
-        cache.insert(data, 1);
-        size++;
+        Node<T> node = new Node<>(data); // Create a Node for the data
+        cache.insert(node, 1);
     }
 
     /**
@@ -68,28 +67,28 @@ public class CacheStorage<T extends Node<?>> {
      * @param data The item to be retrieved from the cache.
      * @return The retrieved item or null if the item is not found in the cache.
      */
-    public T getItem(T data) {
-        Node<T> current = cache.getHead();
-        while (current != null) {
-            // assumption is that the data type in the cache has an equals method
-            if (current.data.equals(data)) {
-                if (current != cache.getHead()) {
-                    current.prev.next = current.next;
-                    if (current.next != null) {
-                        current.next.prev = current.prev;
-                    } else {
-                        cache.setTail(current.prev);
-                    }
-                    current.next = cache.getHead();
-                    current.prev = null;
-                    cache.getHead().prev = current;
-                    cache.setHead(current);
-                }
-                return current.data;
-            }
-            current = current.next;
+    /**
+     * The <code>getItem</code> method gets an item from the cache.
+     * If the item is found in the cache, it is moved to the head of the cache.
+     *
+     * @param The item to be retrieved from the cache.
+     * @return The retrieved item or null if the item is not found in the cache.
+     */
+    public T getItem(int position) {
+        if (position < 1 || position > cache.size) {
+            System.out.println("Invalid position. Please choose a valid position.");
+            return null;
         }
-        return null;
+        Node<T> selectedNode = cache.getNode(position).data;
+        if (selectedNode != null) {
+            // Move the selectedNode to the head of the list
+            cache.deleteByElement(selectedNode);
+            cache.insert(selectedNode, 1);
+            return selectedNode.data;
+        } else {
+            System.out.println("Item not found at the selected position.");
+            return null;
+        }
     }
 
     /**
@@ -102,63 +101,77 @@ public class CacheStorage<T extends Node<?>> {
      * 
      * @param None
      */
-    public void evictLeastRecentlyUsedItem() {
-        Node<T> tail = cache.getTail();
-        if (tail != null) {
-            if (tail.prev != null) {
-                tail.prev.next = null;
-                cache.setTail(tail.prev);
-            } else {
-                cache.setHead(null);
-                cache.setTail(null);
-            }
-            size--;
+    public T evictLeastRecentlyUsedItem() {
+        if (cache.size == 0) {
+            return null; // Cache is empty
         }
+
+        Node<Node<T>> tail = cache.getTail();
+        T evictedData = tail.data.data;
+        cache.delete(cache.size); // Remove the tail node
+
+        return evictedData;
+    }
+
+    public void display() {
+        cache.display();
     }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
         System.out.print("Enter the capacity of the cache: ");
         int capacity = scanner.nextInt();
-        CacheStorage<Node<Object>> cache = new CacheStorage<>(capacity);
+        CacheStorage<String> cache = new CacheStorage<>(capacity);
 
         while (true) {
-            System.out.println("\nCache Operations:");
-            System.out.println("1. Add an item to the cache");
-            System.out.println("2. Get an item from the cache");
-            System.out.println("3. Exit");
-            System.out.print("Enter your choice: ");
+            System.out.println("\nCache Menu:");
+            System.out.println("1. Add Item");
+            System.out.println("2. Get Item");
+            System.out.println("3. Evict Least Recently Used Item");
+            System.out.println("4. Display Cache");
+            System.out.println("5. Exit");
 
+            System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
+            System.out.println("\n");
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter an item to add to the cache: ");
-                    Node<Object> itemToAdd = new Node<Object>(scanner.next());
-                    cache.addItem(itemToAdd);
-                    System.out.println("Item added to the cache.");
+                    System.out.print("Enter item to add: ");
+                    String item = scanner.next();
+                    cache.addItem(item);
+                    System.out.println("Item added to cache.");
+                    System.out.println("Current cache contents:\n");
+                    cache.display();
                     break;
-
                 case 2:
-                    System.out.print("Enter an item to get from the cache: ");
-                    Node<Object> itemToGet = new Node<Object>(scanner.next());
-                    Object result = cache.getItem(itemToGet);
-                    if (result != null) {
-                        System.out.println("Item found in the cache: " + result);
-                    } else {
-                        System.out.println("Item not found in the cache.");
+                    System.out.println("Current cache contents:\n");
+                    cache.display();
+                    System.out.print("Enter the position of the item to retrieve: ");
+                    int positionToRetrieve = scanner.nextInt();
+                    String retrievedItem = cache.getItem(positionToRetrieve);
+                    if (retrievedItem != null) {
+                        System.out.println("Retrieved item: " + retrievedItem);
                     }
                     break;
-
                 case 3:
+                    String evictedItem = cache.evictLeastRecentlyUsedItem();
+                    if (evictedItem != null) {
+                        System.out.println("Evicted item: " + evictedItem);
+                    } else {
+                        System.out.println("Cache is empty.");
+                    }
+                    break;
+                case 4:
+                    System.out.println("Cache contents:");
+                    cache.display();
+                    break;
+                case 5:
                     System.out.println("Exiting the program.");
                     scanner.close();
                     System.exit(0);
-
                 default:
-                    System.out.println("Invalid choice. Please choose a valid option.");
-                    break;
+                    System.out.println("Invalid choice. Please select a valid option.");
             }
         }
     }
