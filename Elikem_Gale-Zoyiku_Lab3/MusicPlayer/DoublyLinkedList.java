@@ -69,7 +69,7 @@ public class DoublyLinkedList<T> {
     /**
      * Deletes the node at the specified position in the linked list.
      * @param position the position of the node to be deleted
-     * @throws IllegalArgumentException if the position is invalid (less than 0 or greater than or equal to the size of the list)
+     * @throws IllegalArgumentException if the position is invalid (less than 0 or greater than the size of the list)
      */
     public void deleteByPosition(int position) {
         if (position < 0 || position >= size) {
@@ -109,8 +109,8 @@ public class DoublyLinkedList<T> {
         Node<T> current = head;
         int position = 0;
 
-        while (current != null) {
-            if (current.data.equals(data)) {
+        while (current != tail) {
+            if (data.equals(current.data)) {
                 deleteByPosition(position);
                 return;
             }

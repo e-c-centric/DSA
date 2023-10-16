@@ -3,37 +3,41 @@ package MusicPlayer;
 import java.util.Scanner;
 
 /**
- * The Song class represents a single song in a music player application. Each song has a title, artist, duration, and album.
- * This class provides methods to get and set each attribute, play the song, edit the song's attributes, and compare two songs for equality.
+ * The Song class represents a single song in a music player application. Each
+ * song has a title, artist, duration, and album.
+ * This class provides methods to get and set each attribute, play the song,
+ * edit the song's attributes, and compare two songs for equality.
  */
 public class Song {
-    
+
     /**
      * The title of the song.
      */
     private String title;
-    
+
     /**
      * The artist who performed the song.
      */
     private String artist;
-    
+
     /**
      * The duration of the song in seconds.
      */
     private int duration;
-    
+
     /**
      * The album that the song belongs to.
      */
     private String album;
 
     /**
-     * Constructs a new Song object with the given title, artist, duration, and album.
-     * @param title the title of the song
-     * @param artist the artist who performed the song
+     * Constructs a new Song object with the given title, artist, duration, and
+     * album.
+     * 
+     * @param title    the title of the song
+     * @param artist   the artist who performed the song
      * @param duration the duration of the song in seconds
-     * @param album the album that the song belongs to
+     * @param album    the album that the song belongs to
      */
     public Song(String title, String artist, int duration, String album) {
         this.title = title;
@@ -44,6 +48,7 @@ public class Song {
 
     /**
      * Returns the title of the song.
+     * 
      * @return the title of the song
      */
     public String getTitle() {
@@ -52,6 +57,7 @@ public class Song {
 
     /**
      * Sets the title of the song to the given value.
+     * 
      * @param title the new title of the song
      */
     public void setTitle(String title) {
@@ -60,6 +66,7 @@ public class Song {
 
     /**
      * Returns the artist who performed the song.
+     * 
      * @return the artist who performed the song
      */
     public String getArtist() {
@@ -68,6 +75,7 @@ public class Song {
 
     /**
      * Sets the artist who performed the song to the given value.
+     * 
      * @param artist the new artist who performed the song
      */
     public void setArtist(String artist) {
@@ -76,6 +84,7 @@ public class Song {
 
     /**
      * Returns the duration of the song in seconds.
+     * 
      * @return the duration of the song in seconds
      */
     public int getDuration() {
@@ -84,6 +93,7 @@ public class Song {
 
     /**
      * Sets the duration of the song to the given value.
+     * 
      * @param duration the new duration of the song in seconds
      */
     public void setDuration(int duration) {
@@ -92,6 +102,7 @@ public class Song {
 
     /**
      * Returns the album that the song belongs to.
+     * 
      * @return the album that the song belongs to
      */
     public String getAlbum() {
@@ -100,6 +111,7 @@ public class Song {
 
     /**
      * Sets the album that the song belongs to to the given value.
+     * 
      * @param album the new album that the song belongs to
      */
     public void setAlbum(String album) {
@@ -114,7 +126,9 @@ public class Song {
     }
 
     /**
-     * Returns a string representation of the song in the format "title by artist (duration seconds)".
+     * Returns a string representation of the song in the format "title by artist
+     * (duration seconds)".
+     * 
      * @return a string representation of the song
      */
     public String toString() {
@@ -122,7 +136,8 @@ public class Song {
     }
 
     /**
-     * Allows the user to edit the song's attributes by prompting for input and setting the appropriate attribute.
+     * Allows the user to edit the song's attributes by prompting for input and
+     * setting the appropriate attribute.
      */
     public void edit() {
         Scanner scanner = new Scanner(System.in);
@@ -158,14 +173,16 @@ public class Song {
             default:
                 System.out.println("Invalid choice.");
 
-            scanner.close();
+                scanner.close();
         }
     }
 
     /**
      * Compares this song to another song for equality.
+     * 
      * @param other the other song to compare to
-     * @return true if the two songs are equal (i.e. have the same title, artist, duration, and album), false otherwise
+     * @return true if the two songs are equal (i.e. have the same title, artist,
+     *         duration, and album), false otherwise
      */
     public boolean equals(Song other) {
         if (this.title.equals(other.title) &&

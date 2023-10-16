@@ -135,25 +135,20 @@ public class MusicPlayer {
         boolean quit = false;
         while (!quit) {
             System.out.println("\nPlease select an option:");
-            System.out.println("1. Create a new playlist");
-            System.out.println("2. Add a song to the current playlist");
-            System.out.println("3. Remove a song from the current playlist");
-            System.out.println("4. Play the current playlist");
-            System.out.println("5. Play the next song");
-            System.out.println("6. Play the previous song");
-            System.out.println("7. Shuffle the current playlist");
-            System.out.println("8. Edit the current song's properties");
-            System.out.println("9. Quit");
+            System.out.println("1. Add a song to the current playlist");
+            System.out.println("2. Remove a song from the current playlist");
+            System.out.println("3. Play the current playlist");
+            System.out.println("4. Play the next song");
+            System.out.println("5. Play the previous song");
+            System.out.println("6. Shuffle the current playlist");
+            System.out.println("7. Edit the current song's properties");
+            System.out.println("8. Quit");
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume the newline character
 
             switch (choice) {
                 case 1:
-                    player = new MusicPlayer();
-                    System.out.println("New playlist created.");
-                    break;
-                case 2:
                     System.out.println("Please enter the song title:");
                     String title = scanner.nextLine();
                     System.out.println("Please enter the song artist:");
@@ -169,7 +164,7 @@ public class MusicPlayer {
                     scanner.nextLine(); // Consume the newline character
                     System.out.println("Song added to the playlist.");
                     break;
-                case 3:
+                case 2:
                     System.out.println("Please enter the song title:");
                     title = scanner.nextLine();
                     System.out.println("Please enter the song artist:");
@@ -183,27 +178,27 @@ public class MusicPlayer {
                     player.removeSong(song);
                     System.out.println("Song removed from the playlist.");
                     break;
-                case 4:
+                case 3:
                     player.play();
                     break;
-                case 5:
+                case 4:
                     player.playNext();
                     break;
-                case 6:
+                case 5:
                     player.playPrevious();
                     break;
-                case 7:
+                case 6:
                     player.shuffle();
                     System.out.println("Playlist shuffled.");
                     break;
-                case 8:
+                case 7:
                     if (player.currentSong != null) {
                         player.currentSong.data.edit();
                     } else {
                         System.out.println("No song is currently playing.");
                     }
                     break;
-                case 9:
+                case 8:
                     quit = true;
                     break;
                 default:

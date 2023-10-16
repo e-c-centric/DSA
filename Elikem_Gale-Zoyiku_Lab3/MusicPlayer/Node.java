@@ -27,4 +27,8 @@ public class Node<T> {
         this.prev = null;
         this.next = null;
     }
+
+    public boolean equals(Node<T> other) {
+        return this.data.equals(other.data);
+    }
 }
