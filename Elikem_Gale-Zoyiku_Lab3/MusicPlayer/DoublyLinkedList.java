@@ -106,16 +106,19 @@ public class DoublyLinkedList<T> {
      * @see Song#equals(Song)
      */
     public void deleteByElement(T data) {
+        Node<T> dataNode = new Node<T>(data);
         Node<T> current = head;
         int position = 0;
+        int count = 0;
 
-        while (current != tail) {
-            if (data.equals(current.data)) {
+        while (count < size) {
+            if (current.equals(dataNode)) {
                 deleteByPosition(position);
                 return;
             }
             current = current.next;
             position++;
+            count++;
         }
     }
 

@@ -1,5 +1,7 @@
 package CacheStorage;
 
+import MusicPlayer.Song;
+
 /**
  * The <code>Node</code> class represents a node in a doubly linked list.
  * It has a <code>data</code> field that stores the data of the node.
@@ -41,5 +43,21 @@ class Node<T> {
     @Override
     public String toString() {
         return data.toString();
+    }
+
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Node)) {
+            return false;
+        }
+        Node<T> other = (Node<T>) obj;
+        if (other.data instanceof T && this.data instanceof T) {
+            T song = (T) other.data;
+            T thisSong = (T) this.data;
+            return thisSong.equals(song);
+        }
+        return false;
     }
 }

@@ -183,8 +183,10 @@ public class Song {
      * @param other the other song to compare to
      * @return true if the two songs are equal (i.e. have the same title, artist,
      *         duration, and album), false otherwise
+     * 
+     * @see Node#equals(Node)
      */
-    public boolean equals(Song other) {
+    public boolean equalsSong(Song other) {
         if (this.title.equals(other.title) &&
                 this.artist.equals(other.artist) &&
                 this.duration == other.duration &&
