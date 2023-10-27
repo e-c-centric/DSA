@@ -1,10 +1,8 @@
 public class StudentMain {
     private Student[] studentArray;
-    private int size;
 
     public StudentMain(int capacity) {
         studentArray = new Student[capacity];
-        size = 0;
     }
 
     public void bubbleSort(){
