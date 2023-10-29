@@ -10,7 +10,7 @@
  */
 public class Queue {
     private Task[] tasks;
-    private int front, rear, size;
+    private int front, rear, size, count;
 
     /**
      * Constructs a new Queue object with the given size.
@@ -25,6 +25,7 @@ public class Queue {
         front = -1;
         rear = -1;
         this.size = size;
+        count = 0;
     }
 
     /**
@@ -59,6 +60,7 @@ public class Queue {
             if (front == -1) {
                 front = 0;
             }
+            count++;
             tasks[++rear] = task;// rear is pre-incremented to point to the next available position in the array,
                                  // i.e., rear is incremented before it is used in the expression.
         }
@@ -89,6 +91,7 @@ public class Queue {
             if (front > rear) {
                 front = rear = -1;
             }
+            count--;
             return task;
         }
     }
@@ -99,7 +102,7 @@ public class Queue {
      * @return <code>true</code> if the queue is empty
      */
     public boolean isEmpty() {
-        return front > rear;
+        return count == 0;
     }
 
     /**

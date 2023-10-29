@@ -138,7 +138,7 @@ public class Task {
      * @return a string representation of the task
      */
     public String toString() {
-        return task_id + ": " + description + "\nStatus: " + status;
+        return "\n" + task_id + ": " + description + "\nStatus: " + status + "\nPriority: " + priority + "\n";
     }
 
     /**

@@ -28,21 +28,39 @@ public class Stack {
     /**
      * Pushes a task onto the stack, i.e. adds a task to the top of the stack.
      * If the stack is full, it prints "Stack is full". The stack is sorted in
-     * descending order of priority using the quick sort algorithm. *
+     * descending order of priority using this algorithm:
+     * <ul>
+     * When a new task comes in, compare it with the current top of the stack.
+     * <li>If the new task has a higher priority than the current top of the
+     * stack, push the new task onto the stack.</li>
+     * <li>If the new task has a lower priority than the current top of the
+     * stack, pop the current top of the stack, push the new task onto the
+     * stack, and then push the popped task back onto the stack.</li>
+     * </ul>
      * 
      * @apiNote top is pre-incremented to point to the next available position in
-     *          the
-     *          array, i.e., top is incremented before it is used in the
+     *          the array, i.e., top is incremented before it is used in the
      *          expression.
+     * @apiNote Possible alternative implementations of this procedure include:
+     *          <ul>
+     *          <li>Using an efficient sorting algorithm to sort the stack after
+     *          every push.</li>
+     *          <li>Using a linked list instead of an array.</li>
+     *          </ul>
      * @param task the task to be pushed onto the stack
-     * @see #sortStack(int, int)
+     * @see #pushAlternative(Task)
      */
     public void push(Task task) {
         if (top == tasks.length - 1) {
             System.out.println("Stack is full");
         } else {
-            tasks[++top] = task;
-            sortStack(0, top);
+            if (top == -1 || tasks[top].getPriority() <= task.getPriority()) {
+                tasks[++top] = task;
+            } else {
+                Task topTask = pop();
+                tasks[++top] = task;
+                tasks[++top] = topTask;
+            }
         }
     }
 
@@ -104,6 +122,30 @@ public class Stack {
     }
 
     /**
+     * Pushes a task onto the stack, i.e. adds a task to the top of the stack.
+     * If the stack is full, it prints "Stack is full". The stack is sorted in
+     * descending order of priority using the quick sort algorithm. *
+     * 
+     * @apiNote top is pre-incremented to point to the next available position in
+     *          the
+     *          array, i.e., top is incremented before it is used in the
+     *          expression.
+     * @param task the task to be pushed onto the stack
+     * @see #sortStack(int, int)
+     * @see #partition(int, int)
+     * @see #swap(int, int)
+     * @apiNote This method is an alternative implementation of the push method.
+     */
+    public void pushAlternative(Task task) {
+        if (top == tasks.length - 1) {
+            System.out.println("Stack is full");
+        } else {
+            tasks[++top] = task;
+            this.sortStack(0, top);
+        }
+    }
+
+    /**
      * Sorts the stack in descending order of priority using the quick sort
      * algorithm. The pivot is the last element in the array. The stack is
      * partitioned such that all elements with a priority greater than the pivot
@@ -143,17 +185,27 @@ public class Stack {
     private int partition(int low, int high) {
         Task pivot = tasks[high];
         int i = low - 1;
+
         for (int j = low; j < high; j++) {
-            if (tasks[j].getPriority() > pivot.getPriority()) {
+            if (tasks[j].getPriority() <= pivot.getPriority()) {
                 i++;
-                Task temp = tasks[i];
-                tasks[i] = tasks[j];
-                tasks[j] = temp;
+                swap(i, j);
             }
         }
-        Task temp = tasks[i + 1];
-        tasks[i + 1] = tasks[high];
-        tasks[high] = temp;
+
+        swap(i + 1, high);
         return i + 1;
+    }
+
+    /**
+     * Swaps two elements in the stack.
+     *
+     * @param i index of the first element
+     * @param j index of the second element
+     */
+    private void swap(int i, int j) {
+        Task temp = tasks[i];
+        tasks[i] = tasks[j];
+        tasks[j] = temp;
     }
 }

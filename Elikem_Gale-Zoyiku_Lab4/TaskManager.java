@@ -2,13 +2,32 @@ import java.util.Scanner;
 
 public class TaskManager {
     public static void main(String[] args) {
+        System.out.println("\u001B[32m" + "Welcome to the Task Management System" + "\u001B[0m");
+        System.out.println("Would you like to use the default size of 10 for the stack and queue? (y/n)");
         Scanner scanner = new Scanner(System.in);
-        Stack stack = new Stack(10);
-        Queue queue = new Queue(10);
-        Queue completedTasks = new Queue(10);
+        String choiceSize = scanner.nextLine();
+        Stack stack;
+        Queue queue;
+        Queue completedTasks;
+       
+        if (choiceSize.equalsIgnoreCase("y")) {
+            stack = new Stack(10);
+            queue = new Queue(10);
+            completedTasks = new Queue(20);
+        } else {
+            System.out.println("Enter the size of the stack: ");
+            int stackSize = scanner.nextInt();
+            System.out.println("Enter the size of the queue: ");
+            int queueSize = scanner.nextInt();
+            stack = new Stack(stackSize);
+            queue = new Queue(queueSize);
+            completedTasks = new Queue(stackSize + queueSize);
+        }
+
         int task_id = 0;
 
         while (true) {
+            System.out.println("\n" + "\u001B[34m");
             System.out.println("Task Management System");
             System.out.println("1. Add Task");
             System.out.println("2. Process Task");
@@ -16,9 +35,11 @@ public class TaskManager {
             System.out.println("4. View Normal Priority Tasks");
             System.out.println("5. View Completed Tasks");
             System.out.println("6. Quit");
+            System.out.println("\u001B[0m \n");
 
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
+            System.out.println("\n");
 
             switch (choice) {
                 case 1:
@@ -36,12 +57,13 @@ public class TaskManager {
                     System.out.println("Task added successfully");
                     break;
                 case 2:
+                    System.out.println("Processing...\nFetching tasks...\n");
                     if (!stack.isEmpty()) {
                         Task highPriorityTask = stack.pop();
                         highPriorityTask.setStatus(Task.Status.COMPLETED);
                         completedTasks.enqueue(highPriorityTask);
                         System.out.println("High priority task processed and moved to completed tasks");
-                    } else if (!queue.isEmpty()) {
+                    }else if (!queue.isEmpty()) {
                         Task normalPriorityTask = queue.dequeue();
                         normalPriorityTask.setStatus(Task.Status.COMPLETED);
                         completedTasks.enqueue(normalPriorityTask);
@@ -52,7 +74,7 @@ public class TaskManager {
                     break;
                 case 3:
                     if (stack.isEmpty()) {
-                        System.out.println("No uncompleted high priority tasks. Go you!");
+                        System.out.println("\u001B[92m" + "No uncompleted high priority tasks. Go you!" + "\u001B[0m");
                     } else {
                         System.out.println("Stack:");
                         for (Task i : stack.getTasks()) {
@@ -65,7 +87,8 @@ public class TaskManager {
                     break;
                 case 4:
                     if (queue.isEmpty()) {
-                        System.out.println("No uncompleted normal priority tasks. Go you!");
+                        System.out
+                                .println("\u001B[92m" + "No uncompleted normal priority tasks. Go you!" + "\u001B[0m");
                     } else {
                         System.out.println("Queue:");
                         for (Task i : queue.getTasks()) {
@@ -78,7 +101,8 @@ public class TaskManager {
                     break;
                 case 5:
                     if (completedTasks.isEmpty()) {
-                        System.out.println("No tasks have been completed. Be more productive!");
+                        System.out.println(
+                                "\u001B[31m" + "No tasks have been completed. Be more productive!" + "\u001B[0m");
                     } else {
                         System.out.println("Completed tasks:");
                         for (Task i : completedTasks.getTasks()) {
@@ -94,7 +118,7 @@ public class TaskManager {
                     System.exit(0);
                     break;
                 default:
-                    System.out.println("Invalid choice");
+                    System.out.println("\u001B[31m" + "Invalid choice" + "\u001B[0m");
             }
         }
     }
