@@ -1,204 +1,167 @@
-/**
- * An array-based deque that stores and processes tasks based on priority.
- */
 public class Deque {
-    private Task[] tasks; // The array to store tasks.
-    private int front; // The index of the front element.
-    private int rear; // The index of the rear element.
-    private int size;
+    private Task[] tasks;
+    private int front;
+    private int rear;
+    private int capacity;
 
-    /**
-     * Constructs a new ArrayDeque with the given size.
-     * 
-     * @param size The maximum capacity of the deque.
-     */
     public Deque(int size) {
         tasks = new Task[size];
         front = -1;
         rear = -1;
-        size = 0;
+        capacity = size;
     }
 
-    /**
-     * Pushes a task into the deque based on its priority.
-     * If the task has a priority greater than or equal to 5, it is inserted at
-     * the front in descending order of priority. If the task's priority is less
-     * than 5, it is added to the rear.
-     * 
-     * @param task The task to be pushed into the deque.
-     * @see #pushNormal(Task)
-     */
+    public boolean isEmpty() {
+        return front == -1;
+    }
+
+    public boolean isFull() {
+        return (front == 0 && rear == capacity - 1) || (front == rear + 1);
+    }
+
     public void push(Task task) {
-        if (task.getPriority() >= 5) {
-            if (isEmpty() || tasks[front].getPriority() <= task.getPriority()) {
-                pushNormal(task);
+        if (task.getPriority() > 5) {
+            if (isEmpty() || task.getPriority() >= tasks[front].getPriority()) {
+                // Push the high-priority task to the front of the Deque
+                pushFront(task);
             } else {
-                int highPriorityEnd = front;
-                while (highPriorityEnd <= rear && tasks[highPriorityEnd].getPriority() >= 5) {
-                    highPriorityEnd++;
-                }
+                // Pop the current front of the Deque
+                Task currentFront = popFront();
 
-                if (highPriorityEnd > front) {
-                    int i = highPriorityEnd;
-                    Task prev = task;
-                    while (i <= rear) {
-                        Task temp = tasks[i];
-                        tasks[i] = prev;
-                        prev = temp;
-                        i++;
-                    }
-                }
+                // Place the new high-priority task at the front of the Deque
+                pushFront(task);
 
-                tasks[front] = task;
+                // Put the popped front back onto the front of the Deque
+                pushFront(currentFront);
             }
         } else {
-            pushNormal(task);
+            // Push the task to the rear of the Deque
+            pushRear(task);
         }
-        size++;
     }
 
-    /**
-     * Pops a task from the front of the deque.
-     * If the deque is not empty and a number of tasks equal to a quarter of the
-     * array's length have been popped from the front, it checks if there are
-     * still high-priority tasks. If high-priority tasks exist, it moves to the
-     * first normal-priority item and pops a quarter of the normal-priority tasks.
-     * 
-     * @return The task that was popped from the front of the deque.
-     */
     public Task pop() {
         if (isEmpty()) {
             System.out.println("Deque is empty");
             return null;
         }
 
-        Task task = tasks[front];
-        tasks[front] = null;
-        front++;
+        Task poppedTask = tasks[front];
+        front = (front + 1) % capacity;
 
-        if (front > tasks.length / 4) {
-            int highPriorityEnd = front;
-            while (highPriorityEnd <= rear && tasks[highPriorityEnd].getPriority() >= 5) {
-                highPriorityEnd++;
-            }
+        // Calculate the threshold for high-priority tasks
+        int highPriorityThreshold = (int) (0.25 * capacity);
 
-            if (highPriorityEnd < rear) {
-                int normalEnd = highPriorityEnd;
-                while (normalEnd <= rear && tasks[normalEnd].getPriority() < 5) {
-                    normalEnd++;
-                }
-
-                if (normalEnd <= rear) {
-                    int i = highPriorityEnd;
-                    int j = normalEnd;
-                    while (j <= rear) {
-                        tasks[i++] = tasks[j++];
-                    }
-
-                    for (int k = rear - (normalEnd - highPriorityEnd) + 1; k <= rear; k++) {
-                        tasks[k] = null;
-                    }
-                    rear = rear - (normalEnd - highPriorityEnd);
+        if (front <= rear) {
+            int i = front;
+            while (i <= rear && i < front + highPriorityThreshold) {
+                if (tasks[i] != null && tasks[i].getPriority() > 5) {
+                    i++;
                 } else {
-                    for (int k = front; k <= rear; k++) {
-                        tasks[k] = null;
-                    }
-                    front = -1;
-                    rear = -1;
+                    break;
                 }
             }
-        }
-        size--;
-        return task;
-    }
 
-    /**
-     * Pushes a task to the rear of the deque.
-     * 
-     * @param task The task to be pushed to the rear of the deque.
-     */
-    public void pushNormal(Task task) {
-        if (rear == tasks.length - 1) {
-            System.out.println("Deque is full");
+            if (i <= rear) {
+                front = i;
+            }
         } else {
-            if (isEmpty()) {
-                front = 0;
+            int i = front;
+            int count = 0;
+            while (count < highPriorityThreshold) {
+                if (tasks[i] != null && tasks[i].getPriority() > 5) {
+                    i++;
+                    count++;
+                } else {
+                    i++;
+                }
             }
-            rear++;
-            tasks[rear] = task;
+
+            front = i % capacity;
         }
+
+        return poppedTask;
     }
 
-    /**
-     * Checks if the deque is empty.
-     * 
-     * @return {@code true} if the deque is empty, {@code false} otherwise.
-     */
-    public boolean isEmpty() {
-        return size == 0;
-    }
+    public void pushFront(Task task) {
+        if (isFull()) {
+            System.out.println("Deque is full. Cannot push.");
+            return;
+        }
 
-    /**
-     * Gets the tasks in the deque.
-     * 
-     * @return The tasks in the deque.
-     */
-    public Task[] getTasks() {
-        Task[] content = new Task[size];
         if (isEmpty()) {
-            return content;
+            front = 0;
+            rear = 0;
+        } else if (front == 0) {
+            front = capacity - 1;
+        } else {
+            front--;
         }
 
-        int index = 0;
-        int i = front;
-        while (true) {
-            content[index] = tasks[i];
-            index++;
-            if (index == size) {
-                break;
-            }
-            i = (i + 1) % tasks.length;
-        }
-        return content;
+        tasks[front] = task;
     }
 
-    /**
-     * Prints the content of the deque.
-     * 
-     * @param deque The deque whose content is to be printed.
-     */
-    public static void printDequeContent(Deque deque) {
-        Task[] tasks = deque.getTasks();
-        for (Task task : tasks) {
-            System.out.println(task);
+    public void pushRear(Task task) {
+        if (isFull()) {
+            System.out.println("Deque is full. Cannot push.");
+            return;
         }
-        System.out.println();
+
+        if (isEmpty()) {
+            front = 0;
+            rear = 0;
+        } else if (rear == capacity - 1) {
+            rear = 0;
+        } else {
+            rear = rear + 1;
+        }
+
+        tasks[rear] = task;
     }
 
-    public static void main(String[] args) {
-        Deque deque = new Deque(10);
-        Random rand = new Random();
-
-        // Pushing tasks with various priorities into the deque.
-        for (int i = 0; i < 10; i++) {
-            int priority = rand.nextInt(10) + 1;
-            Task task = new Task(i + 1, "Task " + (i + 1), Task.Status.PENDING, priority);
-            deque.push(task);
+    public Task popFront() {
+        if (isEmpty()) {
+            System.out.println("Deque is empty. Cannot pop.");
+            return null;
         }
 
-        // Printing the deque's content.
-        System.out.println("Initial Deque Contents:");
-        printDequeContent(deque);
+        Task poppedTask = tasks[front];
 
-        // Poping tasks from the deque.
-        for (int i = 0; i < 5; i++) {
-            Task task = deque.pop();
-            System.out.println("Popped Task: " + task.getDescription());
+        if (front == rear) {
+            front = -1;
+            rear = -1;
+        } else if (front == capacity - 1) {
+            front = 0;
+        } else {
+            front = front + 1;
         }
 
-        // Printing the deque's content after popping.
-        System.out.println("Deque Contents After Popping:");
-        printDequeContent(deque);
+        return poppedTask;
     }
 
+    public Task popRear() {
+        if (isEmpty()) {
+            System.out.println("Deque is empty. Cannot pop.");
+            return null;
+        }
+
+        Task poppedTask = tasks[rear];
+
+        if (front == rear) {
+            front = -1;
+            rear = -1;
+        } else if (rear == 0) {
+            rear = capacity - 1;
+        } else {
+            rear = rear - 1;
+        }
+
+        return poppedTask;
+    }
+
+    public Task[] getTasks() {
+        return tasks;
+    }
+
+   
 }

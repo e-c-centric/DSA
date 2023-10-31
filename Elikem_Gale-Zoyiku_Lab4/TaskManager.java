@@ -49,7 +49,7 @@ public class TaskManager {
                     System.out.print("Enter task priority (0-10): ");
                     int priority = scanner.nextInt();
                     Task task = new Task(++task_id, description, Task.Status.PENDING, priority);
-                    if (priority >= 5) {
+                    if (priority >= 6) {
                         stack.push(task);
                     } else {
                         queue.enqueue(task);
