@@ -74,4 +74,14 @@ public class Node {
     public void setRight(Node right) {
         this.right = right;
     }
+
+    /**
+     * Returns a string representation of the node.
+     *
+     * @return a string representation of the node
+     */
+    @Override
+    public String toString() {
+        return contact.toString();
+    }
 }

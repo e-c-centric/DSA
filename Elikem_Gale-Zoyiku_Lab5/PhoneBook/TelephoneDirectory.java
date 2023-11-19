@@ -1,5 +1,20 @@
 package PhoneBook;
 
+/**
+ * This is a TelephoneDirectory class that represents a telephone directory.
+ * It is implemented using a binary search tree. The tree is sorted by the
+ * names of the contacts in ascending order. The tree does not allow duplicate
+ * names. Each node in the tree contains a contact with information such as
+ * name, phone number,
+ * email, and address.
+ * 
+ * The TelephoneDirectory class provides methods for inserting a new contact,
+ * searching for a contact, deleting a contact, and printing the telephone
+ * directory.
+ * 
+ * @see Node
+ * @see Contact
+ */
 public class TelephoneDirectory {
     private Node root;
 
@@ -20,12 +35,19 @@ public class TelephoneDirectory {
     }
 
     private Node insertRecursive(Node root, Contact contact) {
+        // If the tree is empty, create a new node and return it
         if (root == null) {
             return new Node(contact);
         }
 
+        // Compare the names, ignoring case sensitivity. This is because the tree is
+        // sorted by the names of the contacts in ascending order.
         boolean compareResult = contact.getName().equalsIgnoreCase(root.getContact().getName());
 
+        // If the contact name is less than the root's contact name, insert the contact
+        // in the left subtree. Otherwise, insert the contact in the right subtree. If
+        // the contact name is the same as another contact's name, do not insert the
+        // contact because duplicates should not be allowed in a contact list.
         if (compareResult == false) {
             root.setLeft(insertRecursive(root.getLeft(), contact));
         } else if (compareResult == true) {
@@ -47,19 +69,24 @@ public class TelephoneDirectory {
     public String search(String contactName) {
         Node result = searchRecursive(root, contactName);
         if (result != null) {
-            return result.getContact().getNumber();
+            return result.getContact().toString();
         } else {
             return null;
         }
     }
 
     private Node searchRecursive(Node root, String contactName) {
-        if (root == null || root.getContact().getName().equals(contactName)) {
+        // If the tree is empty or the contact name is the same as the root's contact
+        // name, return the root
+        if (root == null || root.getContact().getName().equalsIgnoreCase(contactName)) {
             return root;
         }
 
+        // Compare the names, ignoring case sensitivity.
         boolean compareResult = contactName.equalsIgnoreCase(root.getContact().getName());
 
+        // If the contact name is less than the root's contact name, search the left
+        // subtree. Otherwise, search the right subtree.
         if (compareResult == false) {
             return searchRecursive(root.getLeft(), contactName);
         } else {
@@ -77,11 +104,16 @@ public class TelephoneDirectory {
     }
 
     private Node deleteRecursive(Node root, String contactName) {
+        // If the tree is empty, return null
         if (root == null) {
             return null;
         }
 
         boolean compareResult = contactName.equalsIgnoreCase(root.getContact().getName());
+
+        // Recursively search for the contact to be deleted.
+        // If the contact name is less than the root's contact name, delete the contact
+        // in the left subtree. Otherwise, delete the contact in the right subtree.
 
         if (compareResult == false) {
             root.setLeft(deleteRecursive(root.getLeft(), contactName));
@@ -94,7 +126,8 @@ public class TelephoneDirectory {
                 return root.getLeft();
             }
 
-            // Node with two children: Get the inorder successor
+            // Node with two children: Get the inorder successor (smallest in the right
+            // subtree) and set it as the root's contact
             root.setContact(minValue(root.getRight()));
 
             // Delete the inorder successor
@@ -104,6 +137,15 @@ public class TelephoneDirectory {
         return root;
     }
 
+    /**
+     * Returns the contact with the smallest name in the tree. This is used to find
+     * the inorder successor of a node. The inorder successor is needed when a node
+     * has two children. The inorder successor is the smallest node in the right
+     * subtree.
+     * 
+     * @param root the root of the tree
+     * @return the contact with the smallest name in the tree
+     */
     private Contact minValue(Node root) {
         Contact minValue = root.getContact();
         while (root.getLeft() != null) {
@@ -120,6 +162,13 @@ public class TelephoneDirectory {
         printInOrder(root);
     }
 
+    /**
+     * Prints the telephone directory in ascending order. This is done by traversing
+     * the tree in order. The left subtree is traversed first, then the root, and
+     * then
+     * the right subtree.
+     * 
+     */
     private void printInOrder(Node root) {
         if (root != null) {
             printInOrder(root.getLeft());
