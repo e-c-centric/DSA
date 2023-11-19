@@ -48,9 +48,9 @@ public class TelephoneDirectory {
         // in the left subtree. Otherwise, insert the contact in the right subtree. If
         // the contact name is the same as another contact's name, do not insert the
         // contact because duplicates should not be allowed in a contact list.
-        if (compareResult == false) {
+        if (compareResult == true) {
             root.setLeft(insertRecursive(root.getLeft(), contact));
-        } else if (compareResult == true) {
+        } else if (compareResult == false) {
             root.setRight(insertRecursive(root.getRight(), contact));
         } else {
             System.out.println("Contact with the same name already exists. Ignoring the new contact.");
@@ -87,7 +87,7 @@ public class TelephoneDirectory {
 
         // If the contact name is less than the root's contact name, search the left
         // subtree. Otherwise, search the right subtree.
-        if (compareResult == false) {
+        if (compareResult == true) {
             return searchRecursive(root.getLeft(), contactName);
         } else {
             return searchRecursive(root.getRight(), contactName);
@@ -115,9 +115,9 @@ public class TelephoneDirectory {
         // If the contact name is less than the root's contact name, delete the contact
         // in the left subtree. Otherwise, delete the contact in the right subtree.
 
-        if (compareResult == false) {
+        if (compareResult == true) {
             root.setLeft(deleteRecursive(root.getLeft(), contactName));
-        } else if (compareResult == true) {
+        } else if (compareResult == false) {
             root.setRight(deleteRecursive(root.getRight(), contactName));
         } else {
             if (root.getLeft() == null) {
