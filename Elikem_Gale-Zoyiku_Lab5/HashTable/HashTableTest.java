@@ -31,9 +31,6 @@ public class HashTableTest {
         hashTable.insert(new Entry("H234", 82));
         hashTable.insert(new Entry("I567", 91));
 
-        Entry entry5 = hashTable.search("F678");
-        System.out.println("Search Result: " + entry5);
-
         Entry entry6 = hashTable.search("H234");
         System.out.println("Search Result: " + entry6);
 

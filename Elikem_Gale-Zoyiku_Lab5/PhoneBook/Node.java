@@ -84,4 +84,39 @@ public class Node {
     public String toString() {
         return contact.toString();
     }
+
+    /**
+     * Returns true if the specified object is equal to the current node, false
+     * otherwise. Two nodes are equal if they have the same contact. Invokes the
+     * equals method of the Contact class.
+     *
+     * @param obj the object to compare to the current node
+     * @return true if the specified object is equal to the current node, false
+     *         otherwise
+     * @see Contact#equals(Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Node) {
+            Node other = (Node) obj;
+            return contact.equals(other.getContact());
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Returns true if the current node is less than the specified node, false
+     * otherwise. A node is less than another node if its contact is
+     * lexicographically less than the other node's contact. Invokes the lessThan
+     * method of the Contact class.
+     *
+     * @param other the node to compare to the current node
+     * @return true if the current node is less than the specified node, false
+     *         otherwise
+     * @see Contact#lessThan(Contact)
+     */
+    public boolean lessThan(Node other) {
+        return contact.lessThan(other.getContact().getName());
+    }
 }

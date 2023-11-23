@@ -191,7 +191,16 @@ public class Contact {
      */
     @Override
     public String toString() {
-        return "name=" + name + ", number=" + number + ", email=" + email + ", address=" + address;
+        String reset = "\u001B[0m";
+        String bold = "\u001B[1m";
+        String cyan = "\u001B[36m";
+        String yellow = "\u001B[33m";
+        String output = bold + "Contact Information:" + reset + "\n";
+        output += cyan + "Name: " + reset + name + "\n";
+        output += cyan + "Phone Number: " + reset + number + "\n";
+        output += cyan + "Email: " + reset + email + "\n";
+        output += yellow + "Address: " + reset + address + "\n";
+        return output;
     }
 
     /**
@@ -201,7 +210,7 @@ public class Contact {
      *
      * @param obj the object to compare to the current contact
      * @return true if the specified object is equal to the current contact, false
-     * otherwise
+     *         otherwise
      */
     @Override
     public boolean equals(Object obj) {
@@ -212,5 +221,31 @@ public class Contact {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Returns true if the current contact is less than the specified contact,
+     * false otherwise. A contact is less than another contact if its name is
+     * lexicographically less than the other contact's name.
+     *
+     * @param other the contact to compare to the current contact
+     * @return true if the current contact is less than the specified contact,
+     *         false otherwise
+     */
+    public boolean lessThan(Contact other) {
+        return name.compareTo(other.getName()) < 0;
+    }
+
+    /**
+     * Returns true if the current contact is less than the specified name, false
+     * otherwise. A contact is less than a name if its name is lexicographically
+     * less than the other name.
+     *
+     * @param name the name to compare to the current contact
+     * @return true if the current contact is less than the specified name, false
+     *         otherwise
+     */
+    public boolean lessThan(String name) {
+        return this.name.compareTo(name) < 0;
     }
 }

@@ -16,6 +16,10 @@ package PhoneBook;
  * @see Contact
  */
 public class TelephoneDirectory {
+    String reset = "\u001B[0m";
+    String bold = "\u001B[1m";
+    String cyan = "\u001B[36m";
+    String yellow = "\u001B[33m";
     private Node root;
 
     /**
@@ -40,20 +44,25 @@ public class TelephoneDirectory {
             return new Node(contact);
         }
 
-        // Compare the names, ignoring case sensitivity. This is because the tree is
-        // sorted by the names of the contacts in ascending order.
-        boolean compareResult = contact.getName().equalsIgnoreCase(root.getContact().getName());
+        // Compare the names, ignoring case sensitivity. If the contact name is less
+        // than
+        // the root's contact name, insert the new contact in the left subtree.
+        // Otherwise,
+        // insert the new contact in the right subtree. If the contact name is the same
+        // as
+        // the root's contact name, ignore the new contact. This ensures that searching
+        // and deleting
+        // a contact is done in O(log n) time as it will utilize a form of binary search
+        // to find the contact.
+        int compareResult = contact.getName().compareToIgnoreCase(root.getContact().getName());
 
-        // If the contact name is less than the root's contact name, insert the contact
-        // in the left subtree. Otherwise, insert the contact in the right subtree. If
-        // the contact name is the same as another contact's name, do not insert the
-        // contact because duplicates should not be allowed in a contact list.
-        if (compareResult == true) {
+        if (compareResult < 0) {
             root.setLeft(insertRecursive(root.getLeft(), contact));
-        } else if (compareResult == false) {
+        } else if (compareResult > 0) {
             root.setRight(insertRecursive(root.getRight(), contact));
         } else {
-            System.out.println("Contact with the same name already exists. Ignoring the new contact.");
+            System.err.println(yellow+"Contact with the same name already exists. Ignoring this new contact."+reset);
+            System.err.println("Contact: " + contact);
         }
 
         return root;
@@ -71,7 +80,7 @@ public class TelephoneDirectory {
         if (result != null) {
             return result.getContact().toString();
         } else {
-            return null;
+            return "Contact not found";
         }
     }
 
@@ -82,16 +91,20 @@ public class TelephoneDirectory {
             return root;
         }
 
-        // Compare the names, ignoring case sensitivity.
-        boolean compareResult = contactName.equalsIgnoreCase(root.getContact().getName());
+        // Compare the names, ignoring case sensitivity. If the contact name is less
+        // than the current root's contact name, search for the contact in the left
+        // subtree recursively.
+        // Otherwise, search for the contact in the right subtree recursively.
+        int compareResult = contactName.compareToIgnoreCase(root.getContact().getName());
 
-        // If the contact name is less than the root's contact name, search the left
-        // subtree. Otherwise, search the right subtree.
-        if (compareResult == true) {
+        if (compareResult == 0) {
+            return root;
+        } else if (compareResult < 0) {
             return searchRecursive(root.getLeft(), contactName);
         } else {
             return searchRecursive(root.getRight(), contactName);
         }
+
     }
 
     /**
@@ -109,15 +122,15 @@ public class TelephoneDirectory {
             return null;
         }
 
-        boolean compareResult = contactName.equalsIgnoreCase(root.getContact().getName());
+        int compareResult = contactName.compareToIgnoreCase(root.getContact().getName());
 
         // Recursively search for the contact to be deleted.
         // If the contact name is less than the root's contact name, delete the contact
         // in the left subtree. Otherwise, delete the contact in the right subtree.
 
-        if (compareResult == true) {
+        if (compareResult < 0) {
             root.setLeft(deleteRecursive(root.getLeft(), contactName));
-        } else if (compareResult == false) {
+        } else if (compareResult > 0) {
             root.setRight(deleteRecursive(root.getRight(), contactName));
         } else {
             if (root.getLeft() == null) {
@@ -127,7 +140,7 @@ public class TelephoneDirectory {
             }
 
             // Node with two children: Get the inorder successor (smallest in the right
-            // subtree) and set it as the root's contact
+            // subtree) and set it as the root contact
             root.setContact(minValue(root.getRight()));
 
             // Delete the inorder successor
