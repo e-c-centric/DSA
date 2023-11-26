@@ -8,14 +8,18 @@ public class OccupancyDisplay {
     }
 
     public void displayOccupancy() {
-        for (Reservation reservation : (Reservation[])reservationTable.getAllEntries()) {
-            Table tableId = reservation.getTable();
-            Customer customerName = reservation.getCustomer();
-            String status = reservation.getStatus();
+        Entry<String, Reservation>[] entries = reservationTable.getAllEntries();
+        for (Entry<String, Reservation> entry : entries) {
+            if (entry != null && entry.getValue() != null) {
+                Reservation reservation = entry.getValue();
+                Table tableId = reservation.getTable();
+                Customer customerName = reservation.getCustomer();
+                String status = reservation.getStatus();
 
-            System.out.println("Table ID: " + tableId +
-                    ", Customer: " + customerName +
-                    ", Status: " + status);
+                System.out.println("Table ID: " + tableId +
+                        ", Customer: " + customerName +
+                        ", Status: " + status);
+            }
         }
     }
 }

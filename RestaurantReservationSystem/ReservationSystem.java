@@ -28,4 +28,8 @@ public class ReservationSystem {
         System.out.println("Current Reservations:");
         System.out.println(reservationsByCustomer);
     }
+
+    public HashTable<String, Reservation> getReservationsByCustomer() {
+        return this.reservationsByCustomer;
+    }
 }

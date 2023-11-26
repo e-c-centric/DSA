@@ -11,7 +11,7 @@ public class HashTable<K, V extends Entry<K,V>> {
 
     public HashTable(int initialCapacity) {
         capacity = initialCapacity;
-        table = Arrays.copyOf(table, capacity);
+        table = (V[]) new Entry[capacity];
         size = 0;
         this.prime = generateRandomPrime(10, 90);
     }
