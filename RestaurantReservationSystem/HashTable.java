@@ -1,5 +1,6 @@
 package RestaurantReservationSystem;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class HashTable<K, V extends Entry<K,V>> {
@@ -10,7 +11,7 @@ public class HashTable<K, V extends Entry<K,V>> {
 
     public HashTable(int initialCapacity) {
         capacity = initialCapacity;
-        table = (V[]) new Entry[capacity];
+        table = Arrays.copyOf(table, capacity);
         size = 0;
         this.prime = generateRandomPrime(10, 90);
     }
@@ -163,7 +164,7 @@ public class HashTable<K, V extends Entry<K,V>> {
         return str.toString();
     }
 
-    public Entry[] getAllEntries() {
+    public Entry<K,V>[] getAllEntries() {
         return table;
     }
 }
