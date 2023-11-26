@@ -162,4 +162,8 @@ public class HashTable<K, V extends Entry<K,V>> {
         }
         return str.toString();
     }
+
+    public Entry[] getAllEntries() {
+        return table;
+    }
 }
