@@ -27,7 +27,7 @@ public class HangmanGame {
 
             while (true) {
                 displayWord(guessedLetters);
-
+                System.out.println();
                 System.out.print("Guess and enter a letter in the word ");
                 displayWord(guessedLetters);
                 System.out.print(" > ");
@@ -65,7 +65,6 @@ public class HangmanGame {
         for (char c : guessedLetters) {
             System.out.print(c);
         }
-        System.out.println();
     }
 
     /**
